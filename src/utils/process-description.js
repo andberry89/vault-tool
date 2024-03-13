@@ -1,5 +1,4 @@
-import removeEmptyLines from "./remove-empty-lines";
-import formatText from "./format-text";
+import sortText from "./sort-text";
 
 const processDescription = (text) => {
   /*
@@ -7,15 +6,17 @@ const processDescription = (text) => {
     */
 
   let textArr = text.trim().split("\n");
-  textArr = removeEmptyLines(textArr);
   console.log("initial text array");
   console.log(textArr);
-  const formattedText = formatText(textArr);
+  const sortedText = sortText(textArr);
+  console.log(sortedText);
 
-  // const desc = text.slice(0, Math.min(...details.idx));
-  console.log("Details Array");
-  console.log(formattedText.details);
-  // console.log(desc);
+  // console.log("Updated Text Array");
+  // console.log(sortedText.text);
+  // console.log("Details Array");
+  // console.log(sortedText.details);
+  // console.log("Related Items Text");
+  // console.log(sortedText.relatedText);
 };
 
 export default processDescription;

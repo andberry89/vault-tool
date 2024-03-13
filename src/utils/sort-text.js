@@ -1,7 +1,9 @@
 import { sliceList, spliceList, sliceLine, spliceLine } from "./slice-splice";
 import filterText from "./filter-text";
+import removeEmptyLines from "./remove-empty-lines";
+import findOrderedUnorderedList from "./find-ordered-unordered-list";
 
-const formatText = (textArr) => {
+const sortText = (textArr) => {
   let text = textArr;
 
   // array of regular expressions to find each necessary detail
@@ -85,10 +87,20 @@ const formatText = (textArr) => {
     }
   }
 
-  console.log("updated text array");
-  console.log(text);
+  // get rid of empty lines at the end of the array
+  text = removeEmptyLines(text);
 
-  return { text, details };
+  // see if any text exists that tell customer about other related items
+  // that are required or optional but compatible
+  let relatedText = "";
+  if (text.length > 2 && text[-1] !== "") {
+    relatedText = text.pop();
+    text = removeEmptyLines(text);
+  }
+
+  console.log(findOrderedUnorderedList(text));
+
+  return { text, details, relatedText };
 };
 
-export default formatText;
+export default sortText;
