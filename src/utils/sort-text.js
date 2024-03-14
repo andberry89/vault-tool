@@ -1,7 +1,7 @@
 import { sliceList, spliceList, sliceLine, spliceLine } from "./slice-splice";
 import filterText from "./filter-text";
 import removeEmptyLines from "./remove-empty-lines";
-import findOrderedUnorderedList from "./find-ordered-unordered-list";
+import findOrderedList from "./find-ordered-list";
 
 const sortText = (textArr) => {
   let text = textArr;
@@ -44,14 +44,9 @@ const sortText = (textArr) => {
   // List of sentences to exclude from final html
   text = filterText(text);
 
-  let details = {
-    contents: [],
-    mechanisms: [],
-    ages: null,
-    players: null,
-    length: null,
-  };
+  let details = [];
 
+  // UTILITY FUNCTIONS
   const findList = (textArr, idxStart, detailIdx) => {
     let idxEnd = -1;
 
@@ -62,7 +57,6 @@ const sortText = (textArr) => {
         break;
       }
     }
-
     details[detailIdx] = sliceList(textArr, idxStart, idxEnd);
     return spliceList(textArr, idxStart, idxEnd);
   };
@@ -72,6 +66,14 @@ const sortText = (textArr) => {
     return spliceLine(textArr, idxStart);
   };
 
+  /*
+   **
+   **
+   **
+   **
+   **
+   */
+
   // test for contents, mechanisms, and player info details
   for (let i = 0; i < regEx.length; i++) {
     for (let j = 0; j < regEx[i].regEx.length; j++) {
@@ -80,9 +82,12 @@ const sortText = (textArr) => {
 
         if (regEx[i].type === "list") {
           text = findList(text, idxStart, i);
-        } else {
+        } else if (regEx[i].type === "line") {
           text = findLine(text, idxStart, i);
         }
+      }
+      if (!details[i]) {
+        details[i] = ["n/a"];
       }
     }
   }
@@ -98,7 +103,7 @@ const sortText = (textArr) => {
     text = removeEmptyLines(text);
   }
 
-  console.log(findOrderedUnorderedList(text));
+  text = findOrderedList(text);
 
   return { text, details, relatedText };
 };
