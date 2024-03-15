@@ -1,4 +1,4 @@
-import { sliceList, spliceList, sliceLine, spliceLine } from "./slice-splice";
+import { sliceList, spliceList, spliceLine } from "./slice-splice";
 import filterText from "./filter-text";
 import removeEmptyLines from "./remove-empty-lines";
 import findOrderedList from "./find-ordered-list";
@@ -57,12 +57,12 @@ const sortText = (textArr) => {
         break;
       }
     }
-    details[detailIdx] = sliceList(textArr, idxStart, idxEnd);
+    details[detailIdx] = sliceList(textArr, idxStart + 1, idxEnd);
     return spliceList(textArr, idxStart, idxEnd);
   };
 
   const findLine = (textArr, idxStart, detailIdx) => {
-    details[detailIdx] = sliceLine(textArr, idxStart);
+    details[detailIdx] = textArr[idxStart].match(/\d+/g);
     return spliceLine(textArr, idxStart);
   };
 

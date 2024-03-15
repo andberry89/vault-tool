@@ -4,11 +4,21 @@
       <DetailTextarea
         id="userInputBox"
         label="Description"
-        :value="description"
+        :value="this.details.initialDescription"
         rows="20"
         cols="50"
-        @update="updateTextarea('description', $event)"
+        @change="
+          updateValue(details, 'initialDescription', $event.target.value)
+        "
+        @paste="updateValue(details, 'initialDescription', $event.target.value)"
+        @keyup="updateValue(details, 'initialDescription', $event.target.value)"
       />
+      <ConvertButton
+        @click="sortDescription(this.details.initialDescription)"
+        :disabled="descriptionIsEmpty"
+      >
+        Get Details
+      </ConvertButton>
     </div>
     <div class="details-container half-container">
       <div id="top-row" class="input-row">
@@ -73,20 +83,28 @@
 
       <div id="middle-row" class="input-row">
         <DetailTextarea
+          id="descriptionInput"
+          label="Description"
+          rows="10"
+          cols="30"
+          :value="this.details.description"
+          @update="updateValue(details, 'description', $event)"
+        />
+        <DetailTextarea
           id="mechanismsInput"
           label="Mechanisms"
           rows="10"
           cols="30"
-          :value="mechanisms"
-          @update="updateTextarea('mechanisms', $event)"
+          :value="this.details.mechanisms"
+          @update="updateValue(details, 'mechanisms', $event)"
         />
         <DetailTextarea
           id="contentsInput"
           label="Contents"
           rows="10"
           cols="30"
-          :value="contents"
-          @update="updateTextarea('contents', $event)"
+          :value="this.details.contents"
+          @update="updateValue(details, 'contents', $event)"
         />
       </div>
 
@@ -98,6 +116,10 @@
       </div>
     </div>
   </div>
+
+  <ConvertButton @click="generateHTML" :disabled="detailsAreEmpty">
+    Generate HTML</ConvertButton
+  >
 </template>
 
 <script>
@@ -105,7 +127,15 @@
   import DetailTextarea from "./DetailTextarea";
   import CrossLink from "./CrossLink";
   import updateValue from "../utils/update-value";
-  import processDescription from "../utils/process-description";
+  import sortText from "../utils/sort-text";
+  import ConvertButton from "./ConvertButton.vue";
+  import {
+    formatDescription,
+    formatDetails,
+    formatList,
+    formatRelatedText,
+    formatHTML,
+  } from "../utils/format-functions";
 
   const testLinks = [
     {
@@ -125,24 +155,18 @@
     },
   ];
 
-  const desc =
-    "Immerse yourself in the enchanting depths of a coral reef ecosystem. Cleverly expand your coral formations and create flourishing habitats, attracting an array of fascinating marine animals.\nAQUA invites you into the beauty and wonder of the ocean, delivering an incredible variety of gameplay experiences for the whole family.\n  1. Grow corals\n  2. Create habitats\n  3. Establish biodiversity\n  4. Win the game\n‣ 2 Mind Flayers\n‣ 2 Mind Flayers\n‣ 6 Miniatures\n‣ 2 Mind Flayers\n\nContents:\n70 Coral Tiles\n72 Small Animal Tiles\n15 Large Animal Tiles\n24 Ecosystem Tiles\n1 Sea Snail Token\n4 Hot Spot Tiles\n2 Miniatures\n  ‣ 2 Mind Flayers\n2 Round Bases (25mm)\n1 Score Pad\nRules\n\nThis is not a stand-alone game. A copy of Meadow is required to play.\n\nDue to distribution restrictions we are only able to ship this product to the United States, Puerto Rico and U.S. Virgin Islands.\n\nAges: 14+\nPlayers: 8 to 10\nGame Length: 30-60 Minutes\n\nMechanisms:\n• End Game Bonuses\n• Pattern Building\n• Tile Placement\n• Variable Set-up";
-
-  // const desc2 =
-  //   "Immerse yourself in the enchanting depths of a coral reef ecosystem. Cleverly expand your coral formations and create flourishing habitats, attracting an array of fascinating marine animals.\nAQUA invites you into the beauty and wonder of the ocean, delivering an incredible variety of gameplay experiences for the whole family.\n  1. Grow corals\n  2. Create habitats\n  3. Establish biodiversity\n  4. Win the game\n\nContents:\n70 Coral Tiles\n72 Small Animal Tiles\n15 Large Animal Tiles\n24 Ecosystem Tiles\n1 Sea Snail Token\n4 Hot Spot Tiles\n2 Miniatures\n  ‣ 2 Mind Flayers\n2 Round Bases (25mm)\n1 Score Pad\nRules\n\nThis is not a stand-alone game. A copy of Meadow is required to play.\n\nDue to distribution restrictions we are only able to ship this product to the United States, Puerto Rico and U.S. Virgin Islands.\n\nPlayers: 8 to 10\nGame Length: 30-60 Minutes\n\nMechanisms:\n• End Game Bonuses\n• Pattern Building\n• Tile Placement\n• Variable Set-up";
-
-  processDescription(desc);
-  // processDescription(desc2);
-
   export default {
     name: "input-form",
     components: {
       DetailInput,
       DetailTextarea,
       CrossLink,
+      ConvertButton,
     },
     data() {
       return {
+        descriptionIsEmpty: true,
+        detailsAreEmpty: true,
         age: {
           minimum: "",
           maximum: "",
@@ -155,8 +179,20 @@
           minimum: "",
           maximum: "",
         },
-        mechanisms: "",
-        contents: "",
+        details: {
+          mechanisms: "",
+          contents: "",
+          description: "",
+          initialDescription: "",
+          relatedText: "",
+        },
+        html: {
+          description: "",
+          contents: "",
+          mechanisms: "",
+          relatedText: "",
+          details: "",
+        },
         crossLinks: [
           {
             title: {
@@ -167,28 +203,61 @@
             },
           },
         ],
-        description: "",
       };
     },
     computed: {
       newLinks() {
         return testLinks;
       },
+      emptyDescription() {
+        return this.details.initialDescription;
+      },
+      emptyDetails() {
+        return this.details.description;
+      },
     },
     methods: {
       updateValue: updateValue,
-      processDescription: processDescription,
-      updateTextarea(key, value) {
-        switch (key) {
-          case "description":
-            this.description = value;
-            break;
-          case "mechanisms":
-            this.mechanisms = value;
-            break;
-          case "contents":
-            this.contents = value;
-            break;
+      sortDescription(text) {
+        const sortedText = sortText(text.trim().split("\n"));
+        this.details.description = sortedText.text.join("\n");
+        this.details.relatedText = sortedText.relatedText;
+        this.details.contents = sortedText.details[0].join("\n") || "";
+        this.details.mechanisms = sortedText.details[1].join("\n") || "";
+        this.age.minimum = sortedText.details[2][0] || "";
+        this.age.maximum = sortedText.details[2][1] || "";
+        this.players.minimum = sortedText.details[3][0] || "";
+        this.players.maximum = sortedText.details[3][1] || "";
+        this.length.minimum = sortedText.details[4][0] || "";
+        this.length.maximum = sortedText.details[4][1] || "";
+      },
+      generateHTML() {
+        this.html.description = formatDescription(this.details.description);
+        this.html.relatedText = formatRelatedText(this.details.relatedText);
+        this.html.details = formatDetails(this.age, this.players, this.length);
+        this.html.contents = formatList("Contents:", this.details.contents);
+        this.html.mechanisms = formatList(
+          "Mechanisms:",
+          this.details.mechanisms
+        );
+
+        const finalHTML = formatHTML(this.html);
+        console.log(finalHTML);
+      },
+    },
+    watch: {
+      emptyDescription: function (newVal) {
+        if (newVal !== "") {
+          this.descriptionIsEmpty = false;
+        } else {
+          this.descriptionIsEmpty = true;
+        }
+      },
+      emptyDetails: function (newVal) {
+        if (newVal !== "") {
+          this.detailsAreEmpty = false;
+        } else {
+          this.detailsAreEmpty = true;
         }
       },
     },

@@ -3,11 +3,11 @@ const formatOrderedList = (arr) => {
   const isOrderedList = arr[0] === "ol";
 
   if (isOrderedList) {
-    arr[0] = "<ul>";
+    arr[0] = "<ol>";
     for (let i = 1; i < len; i++) {
       arr[i] = "<li>" + arr[i] + "</li>";
     }
-    arr.push("</ul>");
+    arr.push("</ol>");
     arr = arr.join("\n");
 
     return arr;

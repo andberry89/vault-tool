@@ -16,12 +16,12 @@ const spliceList = (textArr, startIdx, endIdx) => {
   }
 };
 
-const sliceLine = (textArr, startIdx) => {
-  return textArr.slice(startIdx, startIdx + 1);
-};
+// const sliceLine = (textArr, startIdx) => {
+//   return textArr.slice(startIdx, startIdx + 1);
+// };
 
 const spliceLine = (textArr, startIdx) => {
   return textArr.toSpliced(startIdx, 1);
 };
 
-export { sliceList, spliceList, sliceLine, spliceLine };
+export { sliceList, spliceList, spliceLine };

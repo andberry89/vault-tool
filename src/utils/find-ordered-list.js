@@ -4,7 +4,7 @@ const findOrderedList = (text) => {
   const olIdx = text.findIndex((e) => olRegEx.test(e));
   let ol = [];
 
-  if (olIdx) {
+  if (olIdx > 0) {
     ol = ["ol"];
     let endIdx = len - 1;
     let item = 1;
@@ -20,8 +20,8 @@ const findOrderedList = (text) => {
         break;
       }
     }
-
-    text[olIdx] = ol;
+    ol.push("/ol");
+    text[olIdx] = ol.join("\n");
     text = text.toSpliced(olIdx + 1, endIdx - olIdx);
   }
 

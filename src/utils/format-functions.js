@@ -1,57 +1,174 @@
-import {
-  formatOrderedList,
-  formatUnorderedList,
-  // formatUnorderedList
-} from "./format-list";
-
 const formatDescription = (text) => {
+  text = text.split("\n");
   const len = text.length;
+  let emptyLines = [];
 
   for (let i = 0; i < len; i++) {
-    if (typeof text[i] !== "string") {
-      text[i] = formatOrderedList(text[i]);
+    if (text[i] === "") {
+      emptyLines.push(i);
+    } else if (text[i] === "ol") {
+      text[i] = "<ol>";
+      for (let j = i + 1; j < len; j++) {
+        if (text[j] !== "/ol") {
+          text[j] = "<li>" + text[j] + "</li>";
+        } else {
+          text[j] = "</ol>";
+          i = j;
+          break;
+        }
+      }
     } else {
       text[i] = "<p>" + text[i] + "</p>";
     }
   }
-  return text;
+
+  if (emptyLines.length > 0) {
+    emptyLines = emptyLines.toReversed();
+    emptyLines.forEach((e) => {
+      text.splice(e, 1);
+    });
+  }
+  const last = text.length - 1;
+  text[last] = text[last] + "\n";
+  return text.join("\n");
 };
 
-const formatDetails = (text) => {
-  /* format contents
-   ** format mechanisms
-   ** find ages
-   ** find players
-   ** find game length */
-
-  const len = text.length;
-  let isNotEmpty = [false, false, false, false, false];
-
-  for (let i = 0; i < len; i++) {
-    if (text[i][0].includes("n/a")) {
-      continue;
+/* Take in the minimum and maximum ages for age range, player count, and game length
+ ** and format them into the text we want to appear on the front end
+ */
+const formatDetails = (age, players, length) => {
+  const formatRange = (type, obj) => {
+    let detailsText = "";
+    let range = "";
+    if (obj.minimum === "") {
+      return null;
     } else {
-      isNotEmpty[i] = true;
-    }
-  }
-
-  for (let i = 0; i < len; i++) {
-    if (isNotEmpty[i]) {
-      if (i === 0 || i === 1) {
-        text[i] = formatUnorderedList(text[i]);
+      range = obj.minimum;
+      if (obj.maximum === "") {
+        range += "+";
       } else {
-        text[i] = text[i][0].match(/\d+/g);
+        range += "-" + obj.maximum;
       }
-    } else {
-      continue;
     }
+    switch (type) {
+      case "age":
+        detailsText = "Ages: " + range;
+        break;
+      case "players":
+        detailsText = "Players: " + range;
+        break;
+      case "length":
+        detailsText = "Game Length: " + range + " Minutes";
+        break;
+    }
+
+    return detailsText;
+  };
+
+  const labels = [
+    formatRange("age", age),
+    formatRange("players", players),
+    formatRange("length", length),
+  ];
+
+  const newLabels = labels.filter((e) => e !== null);
+  let html = "nothing";
+
+  if (newLabels.length > 0) {
+    html = '<ul class="details">\n';
+    for (let i = 0; i < newLabels.length; i++) {
+      html += "<li>" + newLabels[i] + "</li>\n";
+    }
+    html += "</ul>\n";
+  } else {
+    return null;
   }
 
-  return text;
+  return html;
+};
+
+// contents, mechanisms
+const formatList = (title, list) => {
+  if (list === "n/a" || list === "") {
+    return null;
+  }
+
+  let newList = list.split("\n");
+  const len = newList.length;
+  let isEmbeddedUL = false;
+  let html = "<p>" + title + "</p>\n";
+  html +=
+    len < 20
+      ? '<ul class="details-list">\n'
+      : '<ul class="details-list" style="columns: 2;">\n';
+
+  for (let i = 0; i < len; i++) {
+    const firstChar = newList[i].search(/[\w|\d|\s]/g);
+    const firstSpace = newList[i].search(/\s/g);
+
+    const char = newList[i].search(/\w|\d/g);
+    if (firstChar !== 0) {
+      newList[i] = newList[i].slice(firstChar).trim();
+    }
+
+    if (!isEmbeddedUL && firstSpace !== 0) {
+      html += "<li>" + newList[i] + "</li>\n";
+    } else if (!isEmbeddedUL && firstSpace === 0) {
+      isEmbeddedUL = true;
+      html += "<ul>\n";
+      html += "<li>" + newList[i].slice(char).trim() + "</li>\n";
+    } else if (isEmbeddedUL && firstSpace === 0) {
+      html += "<li>" + newList[i].slice(char).trim() + "</li>\n";
+    } else {
+      html += "</ul>\n";
+      isEmbeddedUL = false;
+    }
+  }
+  html += "</ul>\n";
+
+  return html;
 };
 
 const formatRelatedText = (text) => {
-  return "<p>" + text + "</p>";
+  if (text === "" || !text) {
+    return null;
+  } else {
+    return '<p class="related-text">' + text + "</p>\n";
+  }
 };
 
-export { formatDescription, formatDetails, formatRelatedText };
+const formatHTML = (obj) => {
+  if (obj.contents) {
+    obj.contents = "<hr />\n" + obj.contents;
+  } else if (!obj.contents && obj.mechanisms) {
+    obj.mechanisms = "<hr />\n" + obj.mechanisms;
+  }
+
+  let order = [
+    obj.description,
+    obj.details,
+    obj.relatedText,
+    obj.contents,
+    obj.mechanisms,
+  ];
+  const len = order.length;
+
+  let html = "";
+
+  for (let i = 0; i < len; i++) {
+    if (order[i] !== null) {
+      html += order[i];
+      console.log(order[i]);
+    }
+  }
+
+  return html;
+};
+
+export {
+  formatDescription,
+  formatDetails,
+  formatList,
+  formatRelatedText,
+  formatHTML,
+};

@@ -26,7 +26,6 @@
         required: true,
       },
       value: {
-        type: String,
         default: "",
         required: false,
       },
