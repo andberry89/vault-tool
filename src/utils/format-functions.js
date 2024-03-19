@@ -1,7 +1,14 @@
-const formatDescription = (text) => {
+import {
+  addCrossLinksToDescription,
+  addCrossLinkstoRelatedText,
+} from "./add-crosslinks";
+
+const formatDescription = (text, links) => {
   text = text.split("\n");
   const len = text.length;
   let emptyLines = [];
+
+  text = addCrossLinksToDescription(text, links);
 
   for (let i = 0; i < len; i++) {
     if (text[i] === "") {
@@ -129,7 +136,9 @@ const formatList = (title, list) => {
   return html;
 };
 
-const formatRelatedText = (text) => {
+const formatRelatedText = (text, links) => {
+  text = addCrossLinkstoRelatedText(text, links);
+
   if (text === "" || !text) {
     return null;
   } else {

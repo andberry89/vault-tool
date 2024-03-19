@@ -27,7 +27,7 @@ const sortText = (textArr) => {
       type: "line",
       detail: "players",
       regEx: [
-        /(P|p)layers:?\s*\d+\s*(-|to)*\s*\d+/,
+        /(P|p)layers:?\s*\d+\s*(-|to)*\s*\d+(\s\(.*\))?/,
         /\d+\s*(-|to)*\s*\d+\s(P|p)layers/,
       ],
     },
@@ -35,7 +35,7 @@ const sortText = (textArr) => {
       type: "line",
       detail: "length",
       regEx: [
-        /(G|g)ame\s(L|l)ength:?\s*\d+(\s*(-|to)*\d*)\s*(M|m)inutes/,
+        /(G|g)ame\s(L|l)ength:?\s*\d+(\s*(-|to)*\d+)?\s*(M|m)inutes/,
         /\d+\s*(((H|h)our)|((to|-)*\s*\d+\s(M|m)inute))\s(P|p)lay(ing)?\s(T|t)ime/,
       ],
     },
@@ -76,14 +76,17 @@ const sortText = (textArr) => {
 
   // test for contents, mechanisms, and player info details
   for (let i = 0; i < regEx.length; i++) {
+    let hasMatch = false;
     for (let j = 0; j < regEx[i].regEx.length; j++) {
-      if (regEx[i].regEx[j].test(text)) {
+      if (!hasMatch && regEx[i].regEx[j].test(text)) {
         const idxStart = text.indexOf(regEx[i].regEx[j].exec(text)[0]);
 
         if (regEx[i].type === "list") {
           text = findList(text, idxStart, i);
+          hasMatch = true;
         } else if (regEx[i].type === "line") {
           text = findLine(text, idxStart, i);
+          hasMatch = true;
         }
       }
       if (!details[i]) {

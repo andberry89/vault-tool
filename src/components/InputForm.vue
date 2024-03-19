@@ -1,125 +1,154 @@
 <template>
-  <div id="container">
-    <div class="input-form-container half-container">
-      <DetailTextarea
-        id="userInputBox"
-        label="Description"
-        :value="this.details.initialDescription"
-        rows="20"
-        cols="50"
-        @change="
-          updateValue(details, 'initialDescription', $event.target.value)
-        "
-        @paste="updateValue(details, 'initialDescription', $event.target.value)"
-        @keyup="updateValue(details, 'initialDescription', $event.target.value)"
-      />
-      <ConvertButton
-        @click="sortDescription(this.details.initialDescription)"
-        :disabled="descriptionIsEmpty"
-      >
-        Get Details
-      </ConvertButton>
-    </div>
-    <div class="details-container half-container">
-      <div id="top-row" class="input-row">
-        <div class="detail-container">
-          <div>
-            <span>Player Count</span>
-          </div>
-          <div>
-            <DetailInput
-              minMax="minimum"
-              label="player"
-              :value="this.players.minimum"
-              @update="updateValue(players, 'minimum', $event)"
-            />
-            <DetailInput
-              minMax="maximum"
-              label="player"
-              :value="this.players.maximum"
-              @update="updateValue(players, 'maximum', $event)"
-            />
-          </div>
-        </div>
-        <div class="detail-container">
-          <div>
-            <span>Game Length</span>
-          </div>
-          <div>
-            <DetailInput
-              minMax="minimum"
-              label="length"
-              :value="this.length.minimum"
-              @update="updateValue(length, 'minimum', $event)"
-            />
-            <DetailInput
-              minMax="maximum"
-              label="length"
-              :value="this.length.maximum"
-              @update="updateValue(length, 'maximum', $event)"
-            />
-          </div>
-        </div>
-        <div class="detail-container">
-          <div>
-            <span>Age Range</span>
-          </div>
-          <div>
-            <DetailInput
-              minMax="minimum"
-              label="age"
-              :value="this.age.minimum"
-              @update="updateValue(age, 'minimum', $event)"
-            />
-            <DetailInput
-              minMax="maximum"
-              label="age"
-              :value="this.age.maximum"
-              @update="updateValue(age, 'maximum', $event)"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div id="middle-row" class="input-row">
+  <div>
+    <div id="container">
+      <div class="input-form-container half-container">
         <DetailTextarea
-          id="descriptionInput"
+          id="userInputBox"
           label="Description"
-          rows="10"
-          cols="30"
-          :value="this.details.description"
-          @update="updateValue(details, 'description', $event)"
+          :value="this.details.initialDescription"
+          rows="20"
+          cols="50"
+          @change="
+            updateValue(details, 'initialDescription', $event.target.value)
+          "
+          @paste="
+            updateValue(details, 'initialDescription', $event.target.value)
+          "
+          @keyup="
+            updateValue(details, 'initialDescription', $event.target.value)
+          "
         />
-        <DetailTextarea
-          id="mechanismsInput"
-          label="Mechanisms"
-          rows="10"
-          cols="30"
-          :value="this.details.mechanisms"
-          @update="updateValue(details, 'mechanisms', $event)"
-        />
-        <DetailTextarea
-          id="contentsInput"
-          label="Contents"
-          rows="10"
-          cols="30"
-          :value="this.details.contents"
-          @update="updateValue(details, 'contents', $event)"
-        />
+        <ConvertButton
+          @click="sortDescription(this.details.initialDescription)"
+          :disabled="descriptionIsEmpty"
+        >
+          Get Details
+        </ConvertButton>
       </div>
-
-      <div id="bottom-row">
-        <div>
-          <span>Cross-Links</span>
+      <div class="details-container half-container">
+        <div id="top-row" class="input-row">
+          <div class="detail-container">
+            <div>
+              <span>Player Count</span>
+            </div>
+            <div>
+              <DetailInput
+                minMax="minimum"
+                label="player"
+                :value="this.players.minimum"
+                @update="updateValue(players, 'minimum', $event)"
+              />
+              <DetailInput
+                minMax="maximum"
+                label="player"
+                :value="this.players.maximum"
+                @update="updateValue(players, 'maximum', $event)"
+              />
+            </div>
+          </div>
+          <div class="detail-container">
+            <div>
+              <span>Game Length</span>
+            </div>
+            <div>
+              <DetailInput
+                minMax="minimum"
+                label="length"
+                :value="this.length.minimum"
+                @update="updateValue(length, 'minimum', $event)"
+              />
+              <DetailInput
+                minMax="maximum"
+                label="length"
+                :value="this.length.maximum"
+                @update="updateValue(length, 'maximum', $event)"
+              />
+            </div>
+          </div>
+          <div class="detail-container">
+            <div>
+              <span>Age Range</span>
+            </div>
+            <div>
+              <DetailInput
+                minMax="minimum"
+                label="age"
+                :value="this.age.minimum"
+                @update="updateValue(age, 'minimum', $event)"
+              />
+              <DetailInput
+                minMax="maximum"
+                label="age"
+                :value="this.age.maximum"
+                @update="updateValue(age, 'maximum', $event)"
+              />
+            </div>
+          </div>
         </div>
-        <CrossLink :links="newLinks" />
+
+        <div id="middle-row" class="input-row">
+          <DetailTextarea
+            id="descriptionInput"
+            label="Description"
+            rows="10"
+            cols="30"
+            :value="this.details.description"
+            @update="updateValue(details, 'description', $event)"
+          />
+          <DetailTextarea
+            id="mechanismsInput"
+            label="Mechanisms"
+            rows="10"
+            cols="30"
+            :value="this.details.mechanisms"
+            @update="updateValue(details, 'mechanisms', $event)"
+          />
+          <DetailTextarea
+            id="contentsInput"
+            label="Contents"
+            rows="10"
+            cols="30"
+            :value="this.details.contents"
+            @update="updateValue(details, 'contents', $event)"
+          />
+        </div>
+
+        <!-- TODO: Finish up Cross-Linking
+      ** Add Related Text Component to be edited
+      ** Create Output component
+      ** Style with CSS
+      -->
+        <div id="bottom-row">
+          <div>
+            <span>Related Text</span>
+          </div>
+
+          <RelatedText v-model:value="details.relatedText" />
+
+          <div>
+            <span>Cross-Links</span>
+          </div>
+
+          <CrossLink
+            v-model:title="crossLinks.first.title"
+            v-model:url="crossLinks.first.url"
+          />
+          <CrossLink
+            v-model:title="crossLinks.second.title"
+            v-model:url="crossLinks.second.url"
+          />
+          <CrossLink
+            v-model:title="crossLinks.third.title"
+            v-model:url="crossLinks.third.url"
+          />
+        </div>
       </div>
     </div>
-  </div>
 
-  <ConvertButton @click="generateHTML" :disabled="detailsAreEmpty">
-    Generate HTML</ConvertButton
-  >
+    <ConvertButton @click="generateHTML" :disabled="detailsAreEmpty">
+      Generate HTML</ConvertButton
+    >
+  </div>
 </template>
 
 <script>
@@ -129,6 +158,7 @@
   import updateValue from "../utils/update-value";
   import sortText from "../utils/sort-text";
   import ConvertButton from "./ConvertButton.vue";
+  import RelatedText from "./RelatedText";
   import {
     formatDescription,
     formatDetails,
@@ -137,24 +167,6 @@
     formatHTML,
   } from "../utils/format-functions";
 
-  const testLinks = [
-    {
-      title: "Test 1",
-      url: "https://www.caranddriver.com",
-      key: 0,
-    },
-    {
-      title: "Test 2",
-      url: "https://www.vaultofmidnight.com",
-      key: 1,
-    },
-    {
-      title: "Test 3",
-      url: "https://google.com",
-      key: 2,
-    },
-  ];
-
   export default {
     name: "input-form",
     components: {
@@ -162,6 +174,7 @@
       DetailTextarea,
       CrossLink,
       ConvertButton,
+      RelatedText,
     },
     data() {
       return {
@@ -193,22 +206,23 @@
           relatedText: "",
           details: "",
         },
-        crossLinks: [
-          {
-            title: {
-              type: String,
-            },
-            url: {
-              type: String,
-            },
+        crossLinks: {
+          first: {
+            title: "",
+            url: "",
           },
-        ],
+          second: {
+            title: "",
+            url: "",
+          },
+          third: {
+            title: "",
+            url: "",
+          },
+        },
       };
     },
     computed: {
-      newLinks() {
-        return testLinks;
-      },
       emptyDescription() {
         return this.details.initialDescription;
       },
@@ -232,8 +246,14 @@
         this.length.maximum = sortedText.details[4][1] || "";
       },
       generateHTML() {
-        this.html.description = formatDescription(this.details.description);
-        this.html.relatedText = formatRelatedText(this.details.relatedText);
+        this.html.description = formatDescription(
+          this.details.description,
+          this.crossLinks
+        );
+        this.html.relatedText = formatRelatedText(
+          this.details.relatedText,
+          this.crossLinks
+        );
         this.html.details = formatDetails(this.age, this.players, this.length);
         this.html.contents = formatList("Contents:", this.details.contents);
         this.html.mechanisms = formatList(
@@ -242,7 +262,10 @@
         );
 
         const finalHTML = formatHTML(this.html);
-        console.log(finalHTML);
+        return finalHTML;
+      },
+      updateLink(link, idx, value) {
+        this.crossLinks[link][idx] = value;
       },
     },
     watch: {
