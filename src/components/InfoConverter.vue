@@ -28,8 +28,4 @@
   };
 </script>
 
-<style lang="scss" scoped>
-  .output {
-    margin-top: 10px;
-  }
-</style>
+<style lang="scss" scoped></style>

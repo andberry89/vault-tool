@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="half-unit">
     <div id="container">
       <div class="input-form-container half-container background">
         <DetailTextarea
@@ -294,28 +294,6 @@
 </script>
 
 <style lang="scss" scoped>
-  #container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    gap: 30px;
-  }
-  .half-container {
-    border: 1px solid #000;
-    border-radius: 8px;
-    padding: 15px;
-    flex-grow: 1;
-    width: 45%;
-  }
-  .input-row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
   .html-btn {
     margin-top: 30px;
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="background">
+  <div class="background half-unit">
     <p>HTML for RMH</p>
     <ConvertButton
       v-if="!emptyHTML"
@@ -49,13 +49,6 @@
 </script>
 
 <style lang="scss" scoped>
-  div {
-    width: 80%;
-    border: 1px solid #000;
-    border-radius: 8px;
-    margin: 0 auto;
-    padding: 0 0 10px;
-  }
   pre code {
     display: block;
     text-align: left;
