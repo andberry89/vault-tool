@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="container">
-      <div class="input-form-container half-container">
+      <div class="input-form-container half-container background">
         <DetailTextarea
           id="userInputBox"
           label="Description"
@@ -24,8 +24,14 @@
         >
           Get Details
         </ConvertButton>
+        <ConvertButton
+          @click="clearDescription()"
+          :disabled="descriptionIsEmpty"
+        >
+          Clear Details</ConvertButton
+        >
       </div>
-      <div class="details-container half-container">
+      <div class="details-container half-container background">
         <div id="top-row" class="input-row">
           <div class="detail-container">
             <div>
@@ -112,12 +118,6 @@
             @update="updateValue(details, 'contents', $event)"
           />
         </div>
-
-        <!-- TODO: Finish up Cross-Linking
-      ** Add Related Text Component to be edited
-      ** Create Output component
-      ** Style with CSS
-      -->
         <div id="bottom-row">
           <div>
             <span>Related Text</span>
@@ -142,12 +142,15 @@
             v-model:url="crossLinks.third.url"
           />
         </div>
+        <ConvertButton
+          class="html-btn"
+          @click="generateHTML"
+          :disabled="detailsAreEmpty"
+        >
+          Generate HTML</ConvertButton
+        >
       </div>
     </div>
-
-    <ConvertButton @click="generateHTML" :disabled="detailsAreEmpty">
-      Generate HTML</ConvertButton
-    >
   </div>
 </template>
 
@@ -232,6 +235,9 @@
     },
     methods: {
       updateValue: updateValue,
+      clearDescription() {
+        this.details.initialDescription = "";
+      },
       sortDescription(text) {
         const sortedText = sortText(text.trim().split("\n"));
         this.details.description = sortedText.text.join("\n");
@@ -262,7 +268,7 @@
         );
 
         const finalHTML = formatHTML(this.html);
-        return finalHTML;
+        this.$emit("update", finalHTML);
       },
       updateLink(link, idx, value) {
         this.crossLinks[link][idx] = value;
@@ -309,5 +315,8 @@
     justify-content: center;
     gap: 15px;
     margin-bottom: 15px;
+  }
+  .html-btn {
+    margin-top: 30px;
   }
 </style>

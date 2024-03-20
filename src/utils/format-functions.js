@@ -25,7 +25,7 @@ const formatDescription = (text, links) => {
         }
       }
     } else {
-      text[i] = "<p>" + text[i] + "</p>";
+      text[i] = "<p>" + text[i].trim() + "</p>";
     }
   }
 
@@ -104,10 +104,7 @@ const formatList = (title, list) => {
   const len = newList.length;
   let isEmbeddedUL = false;
   let html = "<p>" + title + "</p>\n";
-  html +=
-    len < 20
-      ? '<ul class="details-list">\n'
-      : '<ul class="details-list" style="columns: 2;">\n';
+  html += len < 20 ? "<ul>\n" : '<ul style="columns: 2;">\n';
 
   for (let i = 0; i < len; i++) {
     const firstChar = newList[i].search(/[\w|\d|\s]/g);
@@ -142,7 +139,7 @@ const formatRelatedText = (text, links) => {
   if (text === "" || !text) {
     return null;
   } else {
-    return '<p class="related-text">' + text + "</p>\n";
+    return "<p>" + text + "</p>\n";
   }
 };
 
@@ -167,7 +164,6 @@ const formatHTML = (obj) => {
   for (let i = 0; i < len; i++) {
     if (order[i] !== null) {
       html += order[i];
-      console.log(order[i]);
     }
   }
 
