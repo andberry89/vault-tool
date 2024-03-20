@@ -82,7 +82,7 @@ const formatDetails = (age, players, length) => {
   let html = "nothing";
 
   if (newLabels.length > 0) {
-    html = '<ul class="details">\n';
+    html = "<ul>\n";
     for (let i = 0; i < newLabels.length; i++) {
       html += "<li>" + newLabels[i] + "</li>\n";
     }
