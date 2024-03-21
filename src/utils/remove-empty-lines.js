@@ -1,8 +1,12 @@
-const removeEmptyLines = (text) => {
+const removeEmptyLinesFromEnd = (text) => {
   while ((text.slice(-1)[0] === "") | "\n") {
     text.pop();
   }
   return text;
 };
 
-export default removeEmptyLines;
+const removeInnerEmptyLines = (text) => {
+  return text.filter((e) => e !== "");
+};
+
+export { removeEmptyLinesFromEnd, removeInnerEmptyLines };

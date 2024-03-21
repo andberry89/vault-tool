@@ -4,7 +4,7 @@
       type="text"
       :value="value"
       placeholder="Related Text will go here"
-      @input="$emit('value:', $event.target.value)"
+      @change="$emit('update', $event.target.value)"
     />
   </div>
 </template>

@@ -123,7 +123,10 @@
             <span>Related Text</span>
           </div>
 
-          <RelatedText v-model:value="details.relatedText" />
+          <RelatedText
+            :value="this.details.relatedText"
+            @update="updateValue(details, 'relatedText', $event)"
+          />
 
           <div>
             <span>Cross-Links</span>
@@ -148,6 +151,12 @@
           :disabled="detailsAreEmpty"
         >
           Generate HTML</ConvertButton
+        >
+        <ConvertButton
+          class="html-btn"
+          @click="clearDetails()"
+          :disabled="detailsAreEmpty"
+          >Clear Details</ConvertButton
         >
       </div>
     </div>
@@ -238,7 +247,20 @@
       clearDescription() {
         this.details.initialDescription = "";
       },
+      clearDetails() {
+        this.details.description = "";
+        this.details.relatedText = "";
+        this.details.contents = "";
+        this.details.mechanisms = "";
+        this.age.minimum = "";
+        this.age.maximum = "";
+        this.players.minimum = "";
+        this.players.maximum = "";
+        this.length.minimum = "";
+        this.length.maximum = "";
+      },
       sortDescription(text) {
+        this.clearDetails();
         const sortedText = sortText(text.trim().split("\n"));
         this.details.description = sortedText.text.join("\n");
         this.details.relatedText = sortedText.relatedText;

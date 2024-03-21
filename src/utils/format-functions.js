@@ -2,6 +2,7 @@ import {
   addCrossLinksToDescription,
   addCrossLinkstoRelatedText,
 } from "./add-crosslinks";
+import { removeInnerEmptyLines } from "./remove-empty-lines";
 
 const formatDescription = (text, links) => {
   text = text.split("\n");
@@ -47,7 +48,7 @@ const formatDetails = (age, players, length) => {
   const formatRange = (type, obj) => {
     let detailsText = "";
     let range = "";
-    if (obj.minimum === "") {
+    if (obj.minimum === "" || obj.minimum === "n/a") {
       return null;
     } else {
       range = obj.minimum;
@@ -100,7 +101,7 @@ const formatList = (title, list) => {
     return null;
   }
 
-  let newList = list.split("\n");
+  let newList = removeInnerEmptyLines(list.split("\n"));
   const len = newList.length;
   let isEmbeddedUL = false;
   let html = "<p>" + title + "</p>\n";
@@ -125,6 +126,7 @@ const formatList = (title, list) => {
       html += "<li>" + newList[i].slice(char).trim() + "</li>\n";
     } else {
       html += "</ul>\n";
+      html += "<li>" + newList[i].slice(char).trim() + "</li>\n";
       isEmbeddedUL = false;
     }
   }
