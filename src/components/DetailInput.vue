@@ -52,7 +52,7 @@
         return firstLetter + remainingLetters;
       },
       validInput() {
-        if (this.value === "") {
+        if (this.value === "" || this.value === "n/a") {
           return true;
         } else {
           return isNumeric(this.value);
