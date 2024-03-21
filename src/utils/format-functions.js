@@ -53,7 +53,9 @@ const formatDetails = (age, players, length) => {
     } else {
       range = obj.minimum;
       if (obj.maximum === "") {
-        range += "+";
+        if (type !== "age") {
+          range += "+";
+        }
       } else {
         range += "-" + obj.maximum;
       }

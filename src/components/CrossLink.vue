@@ -23,7 +23,7 @@
       <div>
         <p v-if="!validURL" class="invalid">
           URL must start with<br />
-          https://vaultofmidnight.shop/products/
+          https://vaultofmidnight.shop/
         </p>
       </div>
     </div>
@@ -39,8 +39,8 @@
     },
     computed: {
       validURL() {
-        const urlStart = "https://vaultofmidnight.shop/products/";
-        const urlWWWStart = "https://www.vaultofmidnight.shop/products/";
+        const urlStart = "https://vaultofmidnight.shop/";
+        const urlWWWStart = "https://www.vaultofmidnight.shop/";
         if (
           this.url.includes(urlStart) ||
           this.url.includes(urlWWWStart) ||
